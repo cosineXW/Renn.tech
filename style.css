@@ -17,91 +17,73 @@ nav { position: fixed; top: 0; width: 100%; padding: 2rem 4rem; display: flex; j
 .dropdown-content a { margin: 0; padding: 12px 20px; display: block; font-size: 0.8rem; }
 .dropdown:hover .dropdown-content { display: block; }
 
-/* Hero */
-.hero { height: 70vh; display: flex; flex-direction: column; justify-content: center; padding: 0 10vw; }
-.hero h1 { font-family: 'Playfair Display', serif; font-size: 6rem; letter-spacing: -2px; line-height: 1; }
-.hero p {
-    margin-top: 2rem;
-    max-width: 600px;      
-    color: #666;
-    font-weight: 300;
-    line-height: 1.8;      
-}
+/* Hero - 修复顶部被遮挡问题，加入 clamp 等比缩放字体 */
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 10vw 0 10vw; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 6rem); letter-spacing: -2px; line-height: 1; }
+.hero p { margin-top: 2rem; max-width: 600px; color: #666; font-weight: 300; line-height: 1.8; font-size: clamp(0.9rem, 1.5vw, 1rem); }
+
 /* 4个大项目样式 */
 .major-work { display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; padding: 15vh 10vw; align-items: center; }
 .major-work:nth-child(even) .work-text { order: -1; }
 .img-wrapper { overflow: hidden; background-color: #f4f4f4; width: 100%; }
 .img-wrapper img { width: 100%; display: block; filter: grayscale(100%); transition: transform 0.8s ease, filter 0.5s ease; }
 .img-wrapper:hover img { transform: scale(1.08); filter: grayscale(0%); }
-.work-text h2 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1.5rem; }
+.work-text h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; }
 .work-text p { color: #555; font-size: 0.95rem; font-weight: 300; line-height: 1.8; }
 
 /* 分割线 */
-.section-divider { padding: 10vh 10vw; font-family: 'Playfair Display', serif; font-size: 3rem; text-align: right; border-top: 1px solid #eee; }
+.section-divider { padding: 10vh 10vw; font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 3rem); text-align: right; border-top: 1px solid #eee; }
 
 /* 6个全屏小项目样式 */
-.small-work-fullscreen { width: 100%; height: 100vh; display: flex; border-top: 1px solid #eee; }
+.small-work-fullscreen { width: 100%; min-height: 100vh; display: flex; border-top: 1px solid #eee; }
 .small-work-fullscreen:nth-child(even) { flex-direction: row-reverse; }
 
 /* 修改后的小项目显示容器 */
-.project-display { 
-    width: 75%; 
-    height: 100%; 
-    background: transparent; /* 确保完全透明 */
-    display: flex;           /* 启用弹性布局 */
-    justify-content: center; /* 水平居中 */
-    align-items: center;     /* 垂直居中 */
-    padding: 2rem;           /* 增加一点呼吸边距，让作品看起来像装裱在页面里 */
-}
+.project-display { width: 75%; height: 100%; background: transparent; display: flex; justify-content: center; align-items: center; padding: 2rem; }
 
-/* 统一 iframe 的表现，锁定比例消灭黑边 */
+/* 修复 iframe 被切断的问题，匹配 sketch 画布比例 3:2 */
 .project-display iframe { 
-    width: 90%;              /* 撑开到 90% 的宽度，留出一点杂志边缘感 */
-    max-width: 1200px;       /* 防止在特宽屏幕上拉伸过度 */
-    aspect-ratio: 16 / 9;    /* 锁定 16:9 比例，这是 p5.js 最常用的全屏比例 */
+    width: 100%; 
+    max-width: 960px;       
+    aspect-ratio: 3 / 2;    
     border: none; 
-    background: transparent; /* 确保 iframe 内部也是透明的 */
+    background: transparent; 
 }
 .project-info { width: 25%; height: 100%; padding: 4rem 3.5rem; display: flex; flex-direction: column; justify-content: center; background: #fff; }
-.project-info h3 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 2rem; }
+.project-info h3 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 2rem; }
 .project-info .gameplay { font-size: 0.85rem; color: #444; line-height: 2; border-left: 1px solid #111; padding-left: 1.5rem; }
-/* 按钮容器 */
-.button-group {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
 
-/* 基础按钮样式 */
+/* 按钮容器 */
+.button-group { display: flex; flex-wrap: wrap; gap: clamp(0.5rem, 1vw, 1rem); margin-top: 2rem; }
+
+/* 基础按钮样式 - 加入 clamp 完美实现等比例缩小 */
 .btn {
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: clamp(0.6rem, 1vw, 0.75rem);
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: 0.8rem 1.8rem;
+    padding: clamp(0.5rem, 1.2vw, 0.8rem) clamp(1rem, 2.5vw, 1.8rem);
     border: 1px solid #111;
-    border-radius: 50px; /* 圆角矩形关键 */
+    border-radius: 50px; 
     color: #111;
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     display: inline-block;
 }
-
-/* 悬停动画：填充颜色 */
-.btn:hover {
-    background-color: #111;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* 针对小项目侧边栏的按钮微调 */
-.btn-small {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.7rem;
-}
+.btn:hover { background-color: #111; color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
 /* 适配中英文切换时的布局 */
-[lang="zh"] .btn {
-    letter-spacing: 0;
-    font-weight: 400;
+[lang="zh"] .btn { letter-spacing: 0; font-weight: 400; }
+
+/* ================= 移动端/小屏幕响应式适配 ================= */
+@media (max-width: 900px) {
+    nav { padding: 1.5rem 2rem; flex-wrap: wrap; gap: 1rem; }
+    .nav-links { width: 100%; justify-content: space-between; }
+    .nav-links a, .dropdown { margin-left: 0; }
+    
+    .major-work { grid-template-columns: 1fr; gap: 4vw; padding: 10vh 5vw; }
+    .major-work:nth-child(even) .work-text { order: 1; }
+    
+    .small-work-fullscreen, .small-work-fullscreen:nth-child(even) { flex-direction: column; height: auto; }
+    .project-display { width: 100%; height: 60vh; padding: 1rem; }
+    .project-info { width: 100%; height: auto; padding: 3rem 5vw; }
 }
