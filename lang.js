@@ -46,12 +46,24 @@ function initProjectObserver() {
     });
 }
 
-// 3. 页面启动器
+// 3. 汉堡菜单：点击链接后自动关闭
+function initHamburgerClose() {
+    const navLinks = document.querySelector('.nav-links');
+    if (!navLinks) return;
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+}
+
+// 4. 页面启动器
 window.onload = () => {
     // 执行语言检查
     const savedLang = localStorage.getItem('preferredLanguage') || 'en';
     setLanguage(savedLang);
-    
+
     // 启动观察器
     initProjectObserver();
+
+    // 汉堡菜单关闭
+    initHamburgerClose();
 };

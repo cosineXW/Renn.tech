@@ -38,13 +38,13 @@ let bpm = 120;
 let ballImages = {}; 
 
 const soundTypes = [
-    { x: 120, label: "KICK", sound: "kick", img: "1.png" },    // 150 * 0.8
-    { x: 192, label: "SNARE", sound: "snare", img: "2.png" },   // 240 * 0.8
-    { x: 264, label: "HI-HAT", sound: "hh", img: "3.png" },    // 330 * 0.8
-    { x: 336, label: "OPEN HH", sound: "hho", img: "4.png" },   // 420 * 0.8
-    { x: 408, label: "DECOR", sound: "mute", img: "5.png" }    // 510 * 0.8
+    { x: 120, label: "KICK", sound: "kick", img: "1.png" },
+    { x: 192, label: "SNARE", sound: "snare", img: "2.png" },
+    { x: 264, label: "HI-HAT", sound: "hh", img: "3.png" },
+    { x: 336, label: "OPEN HH", sound: "hho", img: "4.png" },
+    { x: 408, label: "DECOR", sound: "mute", img: "5.png" }
 ];
-let ballRadius = 20; // 25 * 0.8
+let ballRadius = 20;
 
 // BACKGROUND & TREE
 let snowflakes = []; 
@@ -57,10 +57,10 @@ const nbranchs = 400;
 let treePos = { x: 0, y: 0 }; 
 let isDraggingTree = false;   
 
-const gravity = 0.08; // 0.1 * 0.8
-const initialVy = 1.6; // 2 * 0.8
+const gravity = 0.08; 
+const initialVy = 1.6; 
 
-// 2. PRELOAD (Keep same)
+// 2. PRELOAD
 function preload() {
     loadJSON("mario.json", loadedMidi);
     meteorImg1 = loadImage("img1.png");
@@ -101,7 +101,22 @@ function processMidiData() {
 
 // 3. SETUP
 function setup() {
-    createCanvas(CANVAS_W, CANVAS_H);
+    // 动态注入响应式容器样式
+    let style = createElement('style', `
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        #sketch-container { width: ${CANVAS_W}px; height: ${CANVAS_H}px; transform-origin: center center; position: relative; }
+    `);
+    style.parent(document.head);
+
+    // 创建包裹 Canvas 和 UI 的容器
+    let container = createDiv();
+    container.id('sketch-container');
+    container.parent(document.body);
+
+    // Canvas 放入容器
+    let cnv = createCanvas(CANVAS_W, CANVAS_H);
+    cnv.parent(container);
+    
     colorMode(HSB, 360, 100, 100, 1);
     noStroke();
 
@@ -121,7 +136,6 @@ function setup() {
     }
 
     createControls(); 
-    
     initDefaultSequencerBalls(); 
     
     masterEq = new Tone.EQ3(0, 0, 0);
@@ -159,6 +173,9 @@ function setup() {
 
     Tone.Transport.bpm.value = bpm;
     Tone.Transport.scheduleRepeat(sequencerRepeat, "16n");
+
+    // 页面加载完毕后先执行一次缩放以匹配 iframe 大小
+    scaleContent();
 }
 
 // 4. DRAW LOOP
@@ -195,27 +212,27 @@ function draw() {
 
     fill(0, 0, 100); 
     textAlign(CENTER, CENTER);
-    textSize(13); // 16 * 0.8
+    textSize(13);
     noStroke();
-    text("Merry Christmas!", width/2, 40); // 50 * 0.8
+    text("Merry Christmas!", width/2, 40); 
 
-    textSize(10); // 12 * 0.8
+    textSize(10); 
     fill(0, 0, 100, 0.6);
     let mixState = crossFader.fade.value > 0.5 ? "DRUMS" : "PIANO";
     let eqState = "FLAT";
     if (masterEq.low.value > 2) eqState = "LOW BOOST";
     if (masterEq.high.value > 2) eqState = "HIGH BOOST";
-    text(`EQ: ${eqState} | MIX: ${mixState}`, width/2, 64); // 80 * 0.8
+    text(`EQ: ${eqState} | MIX: ${mixState}`, width/2, 64);
 }
 
 function drawWaveformHalo() {
     let centerX = width/2;
-    let centerY = PLAY_AREA_H/2 + 40; // 50 * 0.8
+    let centerY = PLAY_AREA_H/2 + 40; 
     let values = masterAnalyzer.getValue();
     
     fill(50, 100, 100, 0.3); 
-    let baseRadius = 280; // 350 * 0.8
-    let scaleFactor = 200; // 250 * 0.8
+    let baseRadius = 280; 
+    let scaleFactor = 200; 
 
     beginShape();
     for (let i = 0; i < values.length; i++) {
@@ -248,7 +265,7 @@ function sequencerRepeat(time) {
 }
 
 function initDefaultSequencerBalls() {
-    let baseY = PLAY_AREA_H + 52; // 65 * 0.8
+    let baseY = PLAY_AREA_H + 52;
     soundTypes.forEach(type => {
         draggableBalls.push({
             x: type.x,
@@ -341,9 +358,9 @@ function playNextPianoChord() {
         let note = allNotes[nextNoteIndex];
         if (Math.abs(note.time - targetTime) < 0.05) {
             synthPiano.triggerAttackRelease(note.name, note.duration, now, note.velocity);
-            let xPos = map(note.midi, minMidi, maxMidi, 80, width - 80); // 100*0.8
+            let xPos = map(note.midi, minMidi, maxMidi, 80, width - 80);
             let selectedImg = random([meteorImg1, meteorImg2, meteorImg3]);
-            let rndScale = random(0.64, 0.96); // 0.8-1.2 scaled by 0.8
+            let rndScale = random(0.64, 0.96);
 
             fallingPianoBalls.push({
                 x: xPos,
@@ -376,10 +393,10 @@ function drawFallingPianoBalls() {
 
 function drawRhythmBar() {
     if (!allNotes || allNotes.length === 0) return;
-    let barHeight = 24; // 30 * 0.8
+    let barHeight = 24; 
     let barY = PLAY_AREA_H; 
-    let startX = 120; // 150 * 0.8
-    let timeScale = 200; // 250 * 0.8
+    let startX = 120; 
+    let timeScale = 200; 
 
     fill(0, 0, 20); 
     rect(0, barY, width, barHeight);
@@ -407,15 +424,19 @@ function drawRhythmBar() {
     }
 }
 
-// 7. UI CONTROLS
+// 7. UI CONTROLS (关键修复区)
 function createControls() {
     const controlDiv = createDiv();
-    controlDiv.position(width - 320, height - 20); // 650*0.8, 50*0.8
+    // 关键修正：将 UI 挂载到动态缩放的包裹容器上，使用相对它的绝对定位
+    controlDiv.parent('sketch-container'); 
+    controlDiv.style('position', 'absolute');
+    controlDiv.style('bottom', '20px');
+    controlDiv.style('right', '20px');
 
     controlDiv.style('display', 'flex');
     controlDiv.style('flex-direction', 'row'); 
     controlDiv.style('align-items', 'center'); 
-    controlDiv.style('gap', '16px'); // 20*0.8
+    controlDiv.style('gap', '16px'); 
     controlDiv.style('font-family', 'sans-serif');
     controlDiv.style('color', 'white');
     controlDiv.style('font-size', '12px');
@@ -449,6 +470,23 @@ function createControls() {
     });
 }
 
+// ================= 新增：处理整体画布和UI等比例缩放 =================
+function scaleContent() {
+    let container = document.getElementById('sketch-container');
+    if (container) {
+        let scaleX = windowWidth / CANVAS_W;
+        let scaleY = windowHeight / CANVAS_H;
+        let scaleVal = min(scaleX, scaleY);
+        // 让容器使用 css transform 居中缩放，所有的画板和 UI 都会跟着动
+        container.style.transform = `scale(${scaleVal})`;
+    }
+}
+
+function windowResized() {
+    scaleContent();
+}
+// ================================================================
+
 // 8. BACKGROUND GENERATORS
 function generateStaticBackground() {
     bgGraphic = createGraphics(width, PLAY_AREA_H);
@@ -456,7 +494,7 @@ function generateStaticBackground() {
     bgGraphic.noStroke();
     let step = 4; 
     let noiseScale = 0.003; 
-    let distortionAmount = 120; // 150 * 0.8
+    let distortionAmount = 120;
     for (let y = 0; y < PLAY_AREA_H; y += step) {
         for (let x = 0; x < width; x += step) {
             let noiseVal = noise(x * noiseScale, y * noiseScale);
@@ -473,13 +511,13 @@ function generateStaticTree() {
     treeGraphic = createGraphics(width, PLAY_AREA_H);
     treeGraphic.colorMode(HSB, 360, 100, 100, 1);
     treeGraphic.clear(); 
-    let left = width/2 - 176; // 220 * 0.8
+    let left = width/2 - 176; 
     let right = width/2 + 176;
-    let foliageTop = PLAY_AREA_H - 440; // 550 * 0.8
+    let foliageTop = PLAY_AREA_H - 440; 
     let bottom = PLAY_AREA_H - 8;
     treeGraphic.noStroke();
     treeGraphic.fill(45, 80, 50); 
-    let trunkW = 16; // 20 * 0.8
+    let trunkW = 16;
     let trunkTop = foliageTop + 80;
     treeGraphic.rect(width/2 - trunkW/2, trunkTop, trunkW, PLAY_AREA_H - trunkTop);
     drawTreeLayer(treeGraphic, left, right, foliageTop, bottom, color(160, 80, 50)); 
@@ -540,6 +578,7 @@ function keyPressed() {
     return false; 
 }
 
+// 此处需要注意坐标缩放计算带来的偏移修正，但 p5 的 mouseX 等原生变量会自动适应 scale
 function mousePressed() {
     if (!isAudioContextStarted) {
         Tone.start(); Tone.Transport.start();
@@ -547,7 +586,7 @@ function mousePressed() {
     }
     let treeCenterX = width/2 + treePos.x;
     let treeCenterY = PLAY_AREA_H/2 + 40 + treePos.y;
-    if (dist(mouseX, mouseY, treeCenterX, treeCenterY) < 160) { // 200 * 0.8
+    if (dist(mouseX, mouseY, treeCenterX, treeCenterY) < 160) {
         let clickedBall = false;
         for (let b of draggableBalls) {
             if (dist(mouseX, mouseY, b.x, b.y) < b.r) { clickedBall = true; break; }
@@ -571,7 +610,7 @@ function mousePressed() {
 }
 
 function updateAudioFromTree() {
-    let mixVal = map(treePos.y, 0, 240, 1, 0); // 300 * 0.8
+    let mixVal = map(treePos.y, 0, 240, 1, 0); 
     mixVal = constrain(mixVal, 0, 1);
     crossFader.fade.rampTo(mixVal, 0.1);
     let panX = constrain(map(width/2 + treePos.x, 0, width, -1, 1), -1, 1);
@@ -587,7 +626,7 @@ function updateAudioFromTree() {
 function mouseDragged() {
     if (isDraggingTree) {
         treePos.x = constrain(mouseX - width/2, -width/2, width/2);
-        treePos.y = constrain(mouseY - (PLAY_AREA_H/2 + 40), 0, 240); // 300 * 0.8
+        treePos.y = constrain(mouseY - (PLAY_AREA_H/2 + 40), 0, 240); 
         updateAudioFromTree();
     }
     if (draggedBall) { draggedBall.x = mouseX; draggedBall.y = mouseY; }
