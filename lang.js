@@ -24,6 +24,8 @@ function initProjectObserver() {
             if (!iframe) return;
 
             const targetSrc = iframe.getAttribute('data-src');
+            // 跳过没有 data-src 的 iframe（外部视频链接等）
+            if (!targetSrc) return;
 
             if (entry.isIntersecting) {
                 // 滚入视口：把 data-src 填入 src，p5.js 开始运行

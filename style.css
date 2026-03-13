@@ -39,7 +39,7 @@ nav { position: fixed; top: 0; width: 100%; padding: 2rem 4rem; display: flex; j
 .small-work-fullscreen:nth-child(even) { flex-direction: row-reverse; }
 
 /* 修改后的小项目显示容器 */
-.project-display { width: 75%; height: 100%; background: transparent; display: flex; justify-content: center; align-items: center; padding: 2rem; }
+.project-display { width: 60%; height: 100%; background: transparent; display: flex; justify-content: center; align-items: center; padding: 2rem; }
 
 /* 修复 iframe 被切断的问题，匹配 sketch 画布比例 3:2 */
 .project-display iframe { 
@@ -49,9 +49,17 @@ nav { position: fixed; top: 0; width: 100%; padding: 2rem 4rem; display: flex; j
     border: none; 
     background: transparent; 
 }
-.project-info { width: 25%; height: 100%; padding: 4rem 3.5rem; display: flex; flex-direction: column; justify-content: center; background: #fff; }
-.project-info h3 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 2rem; }
-.project-info .gameplay { font-size: 0.85rem; color: #444; line-height: 2; border-left: 1px solid #111; padding-left: 1.5rem; }
+.project-info { width: 40%; height: 100%; padding: 4rem 5rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #fff; }
+.project-info h3 { font-family: 'Playfair Display', serif; font-size: clamp(2.1rem, 4.2vw, 2.8rem); margin-bottom: 2rem; }
+.project-info .gameplay { font-size: 1.2rem; color: #444; line-height: 2; border-left: none; padding-left: 0; }
+
+/* 三视频并排板块 */
+.triple-video-section { width: 100%; padding: 8vh 6vw; border-top: 1px solid #eee; }
+.triple-video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; }
+.triple-video-item { text-align: center; }
+.triple-video-item iframe { width: 100%; border: none; background: transparent; }
+.triple-video-item h4 { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem, 2vw, 1.6rem); margin: 1.2rem 0 0.6rem; }
+.triple-video-item p { font-size: 0.95rem; color: #444; line-height: 1.8; }
 
 /* 按钮容器 */
 .button-group { display: flex; flex-wrap: wrap; gap: clamp(0.5rem, 1vw, 1rem); margin-top: 2rem; }
@@ -117,9 +125,12 @@ nav { position: fixed; top: 0; width: 100%; padding: 2rem 4rem; display: flex; j
     .small-work-fullscreen:nth-child(even) { flex-direction: column; min-height: auto; }
     .project-display { width: 100%; height: auto; padding: 1rem; }
     .project-display iframe { max-width: 100%; aspect-ratio: 3 / 2; }
-    .project-info { width: 100%; height: auto; padding: 2rem 6vw 3rem; }
-    .project-info h3 { font-size: 1.4rem; margin-bottom: 1rem; }
-    .project-info .gameplay { font-size: 0.82rem; line-height: 1.8; }
+    .project-info { width: 100%; height: auto; padding: 2rem 6vw 3rem; align-items: center; text-align: center; }
+    .project-info h3 { font-size: 2rem; margin-bottom: 1rem; }
+    .project-info .gameplay { font-size: 1.15rem; line-height: 1.8; border-left: none; padding-left: 0; }
+
+    .triple-video-section { padding: 6vh 4vw; }
+    .triple-video-grid { grid-template-columns: 1fr; gap: 3rem; max-width: 600px; margin: 0 auto; }
 }
 
 /* ================= 小手机适配 (≤480px) ================= */
@@ -139,8 +150,8 @@ nav { position: fixed; top: 0; width: 100%; padding: 2rem 4rem; display: flex; j
 
     .project-display { padding: 0.5rem; }
     .project-info { padding: 1.5rem 5vw 2.5rem; }
-    .project-info h3 { font-size: 1.2rem; margin-bottom: 0.8rem; }
-    .project-info .gameplay { font-size: 0.8rem; padding-left: 1rem; }
+    .project-info h3 { font-size: 1.7rem; margin-bottom: 0.8rem; }
+    .project-info .gameplay { font-size: 1.1rem; padding-left: 0; }
 
     .btn { font-size: 0.6rem; padding: 0.5rem 1rem; }
     .button-group { gap: 0.5rem; }
