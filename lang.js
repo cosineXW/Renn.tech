@@ -9,37 +9,36 @@ function setLanguage(lang) {
 
 // 2. 核心：自动加载/停止 iframe 的“开关”
 function initProjectObserver() {
-    // 选出所有全屏作品的容器
-    const projectSections = document.querySelectorAll('.small-work-fullscreen');
-    
+    // 选出所有需要懒加载的容器（小项目 + 三视频板块）
+    const projectSections = document.querySelectorAll('.small-work-fullscreen, .triple-video-section');
+
     const observerOptions = {
-        root: null, // 默认以浏览器视口为准
-        threshold: 0.4, // 只要露出 10% 就开始加载
-        rootMargin: "0px" 
+        root: null,
+        threshold: 0.3,
+        rootMargin: "0px"
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            const iframe = entry.target.querySelector('iframe');
-            if (!iframe) return;
+            // 支持一个 section 内多个 iframe
+            const iframes = entry.target.querySelectorAll('iframe[data-src]');
+            if (!iframes.length) return;
 
-            const targetSrc = iframe.getAttribute('data-src');
-            // 跳过没有 data-src 的 iframe（外部视频链接等）
-            if (!targetSrc) return;
+            iframes.forEach(iframe => {
+                const targetSrc = iframe.getAttribute('data-src');
 
-            if (entry.isIntersecting) {
-                // 滚入视口：把 data-src 填入 src，p5.js 开始运行
-                if (iframe.src !== targetSrc) {
-                    iframe.src = targetSrc;
-                    console.log("Entering view: Loading " + targetSrc);
+                if (entry.isIntersecting) {
+                    if (iframe.src !== targetSrc) {
+                        iframe.src = targetSrc;
+                        console.log("Entering view: Loading " + targetSrc);
+                    }
+                } else {
+                    if (iframe.src !== "") {
+                        iframe.src = "";
+                        console.log("Leaving view: Stopping project");
+                    }
                 }
-            } else {
-                // 滚出视口：清空 src，强制关掉音乐和进程
-                if (iframe.src !== "") {
-                    iframe.src = "";
-                    console.log("Leaving view: Stopping project");
-                }
-            }
+            });
         });
     }, observerOptions);
 
